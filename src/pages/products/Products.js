@@ -4,6 +4,7 @@ import ProductCard from '../../components/productcard';
 import {API_URL} from '@env';
 import useFetch from '../../hooks/usefetch';
 import Loading from '../../components/loading';
+import Error from '../../components/error';
 
 const Products = () => {
   const {loading, error, response} = useFetch(API_URL);
@@ -14,7 +15,7 @@ const Products = () => {
   }
 
   if (error) {
-    return <Text>{error}</Text>;
+    return <Error />;
   }
 
   return (
