@@ -1,14 +1,22 @@
 import React from 'react';
-import {SafeAreaView, FlatList, Text} from 'react-native';
+import {FlatList} from 'react-native';
 import ProductCard from '../../components/productcard';
 import {API_URL} from '@env';
 import useFetch from '../../hooks/usefetch';
 import Loading from '../../components/loading';
 import Error from '../../components/error';
+import styles from './Products.style';
 
-const Products = () => {
+const Products = ({navigation}) => {
   const {loading, error, response} = useFetch(API_URL);
-  const renderProduct = ({item}) => <ProductCard product={item} />;
+
+  const handleProductSelect = id => {
+    navigation.navigate('details', {id});
+  };
+
+  const renderProduct = ({item}) => (
+    <ProductCard product={item} onSelect={() => handleProductSelect(item.id)} />
+  );
 
   if (loading) {
     return <Loading />;
@@ -19,9 +27,11 @@ const Products = () => {
   }
 
   return (
-    <SafeAreaView>
-      <FlatList data={response} renderItem={renderProduct} />
-    </SafeAreaView>
+    <FlatList
+      data={response}
+      renderItem={renderProduct}
+      style={styles.container}
+    />
   );
 };
 
