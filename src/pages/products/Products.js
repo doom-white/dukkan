@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, View, Text, Pressable} from 'react-native';
 import ProductCard from '../../components/productcard';
 import {API_URL} from '@env';
 import useFetch from '../../hooks/usefetch';
@@ -7,8 +7,11 @@ import Loading from '../../components/loading';
 import Error from '../../components/error';
 import styles from './Products.style';
 
-const Products = ({navigation}) => {
-  const {loading, error, response} = useFetch(API_URL);
+const Products = ({navigation, route}) => {
+  const category = route.params;
+  const {loading, error, response} = useFetch(
+    `${API_URL}/category/${category}`,
+  );
 
   const handleProductSelect = id => {
     navigation.navigate('details', {id});
@@ -27,11 +30,21 @@ const Products = ({navigation}) => {
   }
 
   return (
-    <FlatList
-      data={response}
-      renderItem={renderProduct}
-      style={styles.container}
-    />
+    <View>
+      <View style={styles.headerContainer}>
+        <Pressable onPress={() => navigation.goBack()}>
+          <Text style={styles.text}>Geri</Text>
+        </Pressable>
+        <Text style={styles.text}>
+          {category.toUpperCase()} ({response.length})
+        </Text>
+      </View>
+      <FlatList
+        data={response}
+        renderItem={renderProduct}
+        style={styles.container}
+      />
+    </View>
   );
 };
 
